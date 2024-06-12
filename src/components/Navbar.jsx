@@ -1,28 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { fetchData } from '../features/logSlice';
+import { setLogActive } from '../features/logSetActiveSlice';
+import { viewResearch } from '../features/viewResearchSlice';
+import { viewAnalysis } from '../features/viewAnalysisSlice';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
 
 const Navbar = () => {
 
   const navigate = useNavigate();
 
   const [selectedItem, setSelectedItem] = useState(null);
+  const [path, setPath] = useState(null);
 
   const { loading, data:logResponse, error } = useSelector(state => state.logs) || {};
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchData());
-  }, [dispatch, selectedItem]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(setLogActive({path, active:true}));
+  }, [dispatch, path]);
+
+  // useEffect(() => {
+  //   dispatch(viewResearch({viewResearchPath}));
+  // }, [dispatch, viewResearchPath]);
+
 
   const handleItemClick = (item) => {
     setSelectedItem(selectedItem === item ? null : item);
-    // dispatch(setActive());
   };
 
   const handleSetAsActive=(path)=>{
-    //Set as Active
+    setPath(path)
+  }
+
+  const handleViewResearch=(path)=>{
+    dispatch(viewResearch({viewResearchPath:path}));
+    navigate('/viewResearch') 
+  }
+
+  const handleViewAnalysis=(path)=>{
+    dispatch(viewAnalysis({viewAnalysisPath:path}));
+    navigate('/viewAnalysis')
   }
 
   return (
@@ -43,10 +68,10 @@ const Navbar = () => {
                     <button className="block" onClick={()=>handleSetAsActive(log.path)}>Set as Active</button>
                   </li>
                   <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">
-                    <button className="block" onClick={()=>{ navigate('/viewResearch')}}>View Research</button>
+                    <button className="block" onClick={()=>handleViewResearch(log.path)}>View Research</button>
                   </li>
                   <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">
-                    <button className="block">View Analysis</button>
+                    <button className="block" onClick={()=>handleViewAnalysis(log.path)}>View Analysis</button>
                   </li>
                 </ul>
               </div>

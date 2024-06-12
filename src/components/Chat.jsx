@@ -26,7 +26,17 @@ const dummyData = [
       "from": "Alice",
       "message": "Hello dear user, I have been working on researching Microsoft stock performance and then investigating a South America mining investigation, specifically the lithium mining operation and possible investments in the space. Is there anything specific you would like to know or discuss?",
       "timestamp": "2023-10-02T03:02:36.933729"
-  }];
+  },
+  {
+    "from": "You",
+    "message": "Please research Microsoft stock performance recently",
+    "timestamp": "2023-09-28T15:28:54.836121"
+},
+{
+    "from": "Alice",
+    "message": "Hello dear user, I have been working on researching Microsoft stock performance and investigating a South America mining investigation. Is there anything specific you need assistance with?",
+    "timestamp": "2023-10-01T22:27:03.705094"
+}];
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -96,7 +106,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       <div className="flex-grow p-4 bg-gray-100 overflow-y-auto" style={{ maxHeight: 'calc(100% - 64px)' }}>
         {messages.map((message) => (
           <div
