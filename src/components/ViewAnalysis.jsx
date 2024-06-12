@@ -36,10 +36,6 @@ const ViewAnalysis = () => {
 
   const navigate = useNavigate();
 
-//   useEffect(() => {
-//     setIframeContent(viewAnalysisResponse);
-//   }, [viewAnalysisResponse]);
-
   const handleKill = () => {
     dispatch(kill());
     setKillDone(true);
@@ -61,18 +57,18 @@ const ViewAnalysis = () => {
       </div>
       <div
         className="w-full max-w-4xl border border-gray-300 p-4 mb-4 overflow-x-auto"
-        style={{ maxHeight: '700px' }} // Adjust the max height as needed
+        style={{ maxHeight: '700px' }} 
       >
-        {/* {loading ? (
+        {loading ? (
           <p>Loading...</p>
-        ) : ( */}
+        ) : (
           <iframe
             srcDoc={iframeContent}
             className="w-full h-full"
             style={{ border: 'none', minHeight: '600px' }}
             title="Research Content"
           />
-        {/* )} */}
+        )}
       </div>
       <div className="flex justify-between w-full max-w-4xl">
         <button

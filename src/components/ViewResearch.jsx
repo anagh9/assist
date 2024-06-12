@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaPlay, FaPause, FaChevronLeft } from 'react-icons/fa';
+import { FaPause, FaChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { kill } from '../features/killSlice'
@@ -7,7 +7,7 @@ import { kill } from '../features/killSlice'
 
 const ViewResearch = () => {
 
-  const { loading, data:viewResearchResponse, error } = useSelector(state => state.viewResearch) || {};
+  const { loading, data:viewResearchResponse } = useSelector(state => state.viewResearch) || {};
 
   const dispatch = useDispatch();
 
@@ -47,7 +47,7 @@ const ViewResearch = () => {
       </div>
       <div
         className="w-full max-w-4xl border border-gray-300 p-4 mb-4 overflow-x-auto"
-        style={{ maxHeight: '700px' }} // Adjust the max height as needed
+        style={{ maxHeight: '700px' }} 
       >
         {loading ? (
         <p>Loading...</p>
