@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { kill } from '../features/killSlice';
 
 const ViewAnalysis = () => {
-  const { loading, data: ViewAnalysisResponse, error } = useSelector(state => state.ViewAnalysis) || {};
+  const { loading, data: viewAnalysisResponse, error } = useSelector(state => state.ViewAnalysis) || {};
 
   const dispatch = useDispatch();
   const [killDone, setKillDone] = useState(false);
@@ -37,8 +37,8 @@ const ViewAnalysis = () => {
   const navigate = useNavigate();
 
 //   useEffect(() => {
-//     setIframeContent(ViewAnalysisResponse);
-//   }, [ViewAnalysisResponse]);
+//     setIframeContent(viewAnalysisResponse);
+//   }, [viewAnalysisResponse]);
 
   const handleKill = () => {
     dispatch(kill());

@@ -1,95 +1,68 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaArrowUp } from 'react-icons/fa';
-
-const dummyData = [
-  {
-      "from": "Alice",
-      "message": "Hello user.",
-      "timestamp": "2023-09-28T15:27:32.296859"
-  },
-  {
-      "from": "You",
-      "message": "Please research Microsoft stock performance recently",
-      "timestamp": "2023-09-28T15:28:54.836121"
-  },
-  {
-      "from": "Alice",
-      "message": "Hello dear user, I have been working on researching Microsoft stock performance and investigating a South America mining investigation. Is there anything specific you need assistance with?",
-      "timestamp": "2023-10-01T22:27:03.705094"
-  },
-  {
-      "from": "You",
-      "message": "Hello ALICE. Please investigate the South America lithium mining operation and possible investments in the space",
-      "timestamp": "2023-10-01T22:27:03.705462"
-  },
-  {
-      "from": "Alice",
-      "message": "Hello dear user, I have been working on researching Microsoft stock performance and then investigating a South America mining investigation, specifically the lithium mining operation and possible investments in the space. Is there anything specific you would like to know or discuss?",
-      "timestamp": "2023-10-02T03:02:36.933729"
-  },
-  {
-    "from": "You",
-    "message": "Please research Microsoft stock performance recently",
-    "timestamp": "2023-09-28T15:28:54.836121"
-},
-{
-    "from": "Alice",
-    "message": "Hello dear user, I have been working on researching Microsoft stock performance and investigating a South America mining investigation. Is there anything specific you need assistance with?",
-    "timestamp": "2023-10-01T22:27:03.705094"
-}];
+import { FiEdit2 } from 'react-icons/fi';
+import { useSelector, useDispatch } from 'react-redux';
+import { chatMessages } from '../features/chatMessagesSlice'
+import { questionMessages } from '../features/questionMessagesSlice'
+import { questionMessagesEdit } from '../features/questionMessagesEditSlice'
+import { prompt } from '../features/promptSlice'
 
 const Chat = () => {
-  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    setMessages(dummyData.map((msg, index) => ({
-      text: msg.message,
-      sender: msg.from === 'You' ? 'user' : 'bot',
-      timestamp: msg.timestamp,
-      id: index
-    })));
-  }, []);
+  const [chats, setChats] = useState([]);
+  const [editedChat, setEditedChat] = useState('');
+  const [editIndex, setEditIndex] = useState(null);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const [responseMessages, setResponseMessages] = useState([])
 
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+  const handleEditClick = (index) => {
+    setEditIndex(index);
+    setEditedChat(chats?.[index]?.name);
   };
+
+  const handleSaveClick = ({id, name}) => {
+    const updatedChats = [...chats];
+    updatedChats[editIndex] = editedChat;
+    setChats(updatedChats);
+    setEditIndex(null);
+    setEditedChat('');
+    dispatch(questionMessagesEdit({id, name}))
+  };
+
+  const { data:chatMessagesResponse } = useSelector(state => state.chatMessages) || {};
+  const { loading, data:questionMessagesResponse } = useSelector(state => state.questionMessages) || {};
+
+  useEffect(()=>{
+    setEditedChat(questionMessagesResponse?.conversations)
+  },[questionMessagesResponse])
+
+  useEffect(() => {
+    setChats(questionMessagesResponse?.conversations)
+    setResponseMessages(chatMessagesResponse?.history)
+  }, [questionMessagesResponse?.conversations, chatMessagesResponse?.history ])
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(chatMessages())
+    dispatch(questionMessages())
+  }, [dispatch]);
 
   const handleSendMessage = () => {
-    if (input.trim()) {
-      const newMessage = {
-        text: input,
-        sender: 'user',
-        timestamp: new Date().toISOString(),
-        id: messages.length // Unique id for the message
-      };
-      const newMessages = [...messages, newMessage];
-      setMessages(newMessages);
-      setInput('');
-      // Trigger auto-response after a delay
-      setTimeout(() => {
-        handleAutoResponse(newMessages);
-      }, 1000); // 1 second delay for the auto-response
+    if ((input || '').trim()) {
+      dispatch(prompt({input}))
+      setInput('')
     }
   };
 
-  const handleAutoResponse = (newMessages) => {
-    const autoResponseText = "This is an auto-response.";
-    const botMessage = {
-      text: autoResponseText,
-      sender: 'bot',
-      timestamp: new Date().toISOString(),
-      id: newMessages.length // Unique id for the message
-    };
-    setMessages([...newMessages, botMessage]);
-  };
+  const handleChangeChats = (chatId) => {
+
+    const { messages } = (chats || []).filter(chat => chat.id === chatId)?.[0] || {}
+    setResponseMessages(messages)
+
+  }
 
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
@@ -106,43 +79,93 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex-grow p-4 bg-gray-100 overflow-y-auto" style={{ maxHeight: 'calc(100% - 64px)' }}>
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`mb-2 p-2 rounded shadow max-w-md ${
-              message.sender === 'user' ? 'bg-white self-start' : 'bg-gray-300 self-end'
-            }`}
-            style={{ marginLeft: message.sender === 'bot' ? 'inherit' : 'auto' }}
-          >
-            <div className="text-xs text-gray-500 mb-1">{formatTimestamp(message.timestamp)}</div>
-            {message.text}
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-      <div className="p-4 bg-gray-200 flex items-center">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-grow p-2 border rounded mr-2"
-          placeholder="Type a message..."
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleSendMessage();
-            }
-          }}
-        />
-        <button
-          onClick={handleSendMessage}
-          className="p-2 bg-blue-500 text-white rounded"
+    <div className="flex flex-col h-full">
+    {!!chats?.length && 
+    <div className="bg-gray-200 p-2 flex items-center">
+      {
+      (chats|| [])
+      .map((chat, index) => (
+        <div
+          key={index}
+          className="p-2 bg-white shadow rounded mr-2 cursor-pointer"
+          onClick={() => handleChangeChats(chat?.id)}
         >
-          <FaArrowUp />
-        </button>
-      </div>
+          {index === editIndex ? (
+            <div>
+              <input
+                type="text"
+                value={editedChat}
+                onChange={(e) => setEditedChat(e.target.value)}
+                className="mr-2"
+              />
+              <button
+                onClick={()=>{handleSaveClick({id: chat.id, name:editedChat})}}
+                className="bg-blue-500 text-white p-1 rounded"
+              >
+                Save
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center">
+              {chat?.name}
+              <FiEdit2
+                onClick={() => handleEditClick(index)}
+                className="ml-2 cursor-pointer"
+              />
+            </div>
+          )}
+        </div>
+      ))}
     </div>
+  }
+
+    <div className="flex-grow p-4 bg-gray-100 overflow-y-auto" style={{ height: 'calc(700px)' }}>
+    {loading ? (
+        <p>Loading...</p>
+      ):
+      (responseMessages|| [])
+      // ([{message: "please provide a set of feature hypotheses with optimal models to leverage for the quantitative analysis of game stop equity.", "from": "You", "timestamp": "2024-06-05T21:44:15.549746"}, {message: 'Okay', from: "Alice", timestamp: "2024-06-05T21:52:50.240635"}])
+      .map((msg, index) => ({
+        text: msg.message,
+        sender: msg.from === 'You' ? 'user' : 'alice',
+        timestamp: msg.timestamp,
+        id: index
+      }))
+      .map((message) => (
+        <div
+          key={message.id}
+          className={`mb-2 p-2 rounded shadow max-w-md ${
+            message.sender === 'user' ? 'bg-white self-start' : 'bg-gray-300 self-end'
+          }`}
+          style={{ marginLeft: message.sender === 'alice' ? 'inherit' : 'auto' }}
+        >
+          <div className="text-xs text-gray-500 mb-1">{formatTimestamp(message.timestamp)}</div>
+          {message.text}
+        </div>
+      ))}
+      <div ref={messagesEndRef} />
+    </div>
+    <div className="p-4 bg-gray-200 flex items-center">
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className="flex-grow p-2 border rounded mr-2"
+        placeholder="Type a message..."
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleSendMessage();
+          }
+        }}
+      />
+      <button
+        onClick={()=>handleSendMessage()}
+        className="p-2 bg-blue-500 text-white rounded"
+      >
+        <FaArrowUp />
+      </button>
+    </div>
+  </div>
   );
 };
 

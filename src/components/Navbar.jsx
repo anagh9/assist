@@ -23,21 +23,13 @@ const Navbar = () => {
     dispatch(fetchData());
   }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(setLogActive({path, active:true}));
-  }, [dispatch, path]);
-
-  // useEffect(() => {
-  //   dispatch(viewResearch({viewResearchPath}));
-  // }, [dispatch, viewResearchPath]);
-
-
   const handleItemClick = (item) => {
     setSelectedItem(selectedItem === item ? null : item);
   };
 
   const handleSetAsActive=(path)=>{
     setPath(path)
+    dispatch(setLogActive({path, active:true}));
   }
 
   const handleViewResearch=(path)=>{
