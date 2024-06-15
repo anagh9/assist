@@ -30,7 +30,6 @@ export const { fetchDataRequest, fetchDataSuccess, fetchDataFailure } = logSlice
 
 export const fetchData = () => async (dispatch) => {
 
-  let response1 = []
   let response = []
   dispatch(fetchDataRequest());
   try {
