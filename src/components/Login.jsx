@@ -1,9 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const LoginPage = () => {
 
   const navigate = useNavigate();
+
+  const { loginWithRedirect } = useAuth0();
 
   const handleLogin = () => {
     navigate('/home');
@@ -18,7 +21,7 @@ const LoginPage = () => {
           <button
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
-            onClick={handleLogin}
+            onClick={loginWithRedirect}
           >
             SignIn with Auth0
           </button>
