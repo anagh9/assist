@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaPause, FaChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { kill } from '../features/killSlice';
 
 const ViewAnalysis = () => {
-  const { loading, data: viewAnalysisResponse, error } = useSelector(state => state.ViewAnalysis) || {};
-
+  const { loading, data: viewAnalysisResponse } = useSelector(state => state.ViewAnalysis) || {};
+  console.log(viewAnalysisResponse)
   const dispatch = useDispatch();
   const [killDone, setKillDone] = useState(false);
 
@@ -32,7 +32,7 @@ const ViewAnalysis = () => {
   </html>
 `;
 
-  const [iframeContent, setIframeContent] = useState(sampleHtmlContent);
+  const iframeContent = sampleHtmlContent;
 
   const navigate = useNavigate();
 

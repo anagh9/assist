@@ -1,16 +1,12 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const LoginPage = () => {
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { loginWithRedirect } = useAuth0();
-
-  const handleLogin = () => {
-    navigate('/home');
-  }
 
   return (
     <div className="flex h-screen items-center justify-center bg-gray-100">

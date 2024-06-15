@@ -13,9 +13,9 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const [selectedItem, setSelectedItem] = useState(null);
-  const [path, setPath] = useState(null);
+  // const [path, setPath] = useState(null);
 
-  const { loading, data:logResponse, error } = useSelector(state => state.logs) || {};
+  const { loading, data:logResponse } = useSelector(state => state.logs) || {};
 
   const dispatch = useDispatch();
 
@@ -28,7 +28,6 @@ const Navbar = () => {
   };
 
   const handleSetAsActive=(path)=>{
-    setPath(path)
     dispatch(setLogActive({path, active:true}));
   }
 
