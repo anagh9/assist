@@ -1,14 +1,35 @@
-import React from 'react';
-// import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Navbar from './Navbar'; // Assuming you have a Navbar component
 import Chat from './Chat'; // Assuming you have a Chat component
 import { FaUserCircle } from 'react-icons/fa'; // Assuming you are using react-icons for the user icon
 
 const LoginPage = () => {
-  // const navigate = useNavigate();
+  const { isAuthenticated, loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
+  const [showLogout, setShowLogout] = useState(false);
 
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  useEffect(() => {
+    const getToken = async () => {
+      try {
+        if (isAuthenticated) {
+          const token = await getAccessTokenSilently();
+          localStorage.setItem('authToken', token); // Store token in localStorage
+        }
+      } catch (error) {
+        console.error("Error getting token: ", error);
+      }
+    };
+    getToken();
+  }, [isAuthenticated, getAccessTokenSilently]);
+
+  const handleLogout = () => {
+    logout({ returnTo: window.location.origin });
+    localStorage.removeItem('authToken'); // Remove token from localStorage
+  };
+
+  const toggleLogout = () => {
+    setShowLogout(!showLogout);
+  };
 
   return !isAuthenticated ? (
     <div className="flex h-screen items-center justify-center bg-gray-100">
@@ -30,14 +51,16 @@ const LoginPage = () => {
     <div className="flex">
       <Navbar />
       <div className="flex-grow flex flex-col">
-        <header className="flex justify-between items-center p-4 bg-gray-800 text-white">
-          <FaUserCircle className="h-8 w-8" />
-          <button
-            onClick={() => logout({ returnTo: window.location.origin })}
-            className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none"
-          >
-            Logout
-          </button>
+        <header className="flex justify-end items-center p-4 bg-gray-800 text-white relative">
+          <FaUserCircle className="h-8 w-8 cursor-pointer" onClick={toggleLogout} />
+          {showLogout && (
+            <button
+              onClick={handleLogout}
+              className="absolute top-12 right-0 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none"
+            >
+              Logout
+            </button>
+          )}
         </header>
         <main className="flex-grow p-4">
           <div className="overflow-y-auto">
