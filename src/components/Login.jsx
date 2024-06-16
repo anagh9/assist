@@ -31,7 +31,7 @@ const LoginPage = () => {
     logout({ returnTo: window.location.origin });
     localStorage.removeItem('authToken'); // Remove token from localStorage
     isAuthenticated = false
-    navigate('/viewResearch') 
+    navigate('/logout') 
   };
 
   const toggleLogout = () => {
