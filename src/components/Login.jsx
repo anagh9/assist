@@ -8,7 +8,7 @@ import { FaUserCircle } from 'react-icons/fa'; // Assuming you are using react-i
 const LoginPage = () => {
   // const navigate = useNavigate();
 
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
   return !isAuthenticated ? (
     <div className="flex h-screen items-center justify-center bg-gray-100">
@@ -30,8 +30,14 @@ const LoginPage = () => {
     <div className="flex">
       <Navbar />
       <div className="flex-grow flex flex-col">
-        <header className="flex justify-end p-4 bg-gray-800 text-white">
+        <header className="flex justify-between items-center p-4 bg-gray-800 text-white">
           <FaUserCircle className="h-8 w-8" />
+          <button
+            onClick={() => logout({ returnTo: window.location.origin })}
+            className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none"
+          >
+            Logout
+          </button>
         </header>
         <main className="flex-grow p-4">
           <div className="overflow-y-auto">
