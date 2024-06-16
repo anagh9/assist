@@ -5,6 +5,7 @@ import Home from './components/Home';
 import LoginPage from './components/Login';
 import ViewResearch from './components/ViewResearch'
 import ViewAnalysis from './components/ViewAnalysis';
+import Logout from './components/Logout';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/viewResearch" element={<ViewResearch />} />
         <Route path="/viewAnalysis" element={<ViewAnalysis />} />
+        <Route path="/logout" element={<Logout />} />
       </Routes>
     </Router>
   );
