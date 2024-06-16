@@ -12,7 +12,6 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/callback" element={<Home />} />
         <Route path="/viewResearch" element={<ViewResearch />} />
         <Route path="/viewAnalysis" element={<ViewAnalysis />} />
       </Routes>
