@@ -5,7 +5,8 @@ import Chat from './Chat'; // Assuming you have a Chat component
 import { FaUserCircle } from 'react-icons/fa'; // Assuming you are using react-icons for the user icon
 
 const LoginPage = () => {
-  const { isAuthenticated, loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
+  const { loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
+  let { isAuthenticated } = useAuth0()
   const [showLogout, setShowLogout] = useState(false);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const LoginPage = () => {
   const handleLogout = () => {
     logout({ returnTo: window.location.origin });
     localStorage.removeItem('authToken'); // Remove token from localStorage
+    isAuthenticated = false
   };
 
   const toggleLogout = () => {
