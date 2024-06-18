@@ -39,11 +39,10 @@ export const questionMessages = () => async (dispatch) => {
           'Authorization': `Bearer ${token}`
         }
       })
-      console.log(response)
-    // dispatch(questionMessagesSuccess(response.data));
-    const resp = {
-      conversations: [{id: "convo", name: "Answer", messages: [{message: "please provide a set of feature hypotheses with optimal models to leverage for the quantitative analysis of game stop equity.", "from": "You", "timestamp": "2024-06-05T21:44:15.549746"}, {message: null, from: "Alice", timestamp: "2024-06-05T21:52:50.240635"}]}]}
-    dispatch(questionMessagesSuccess(resp));
+    dispatch(questionMessagesSuccess(response.data));
+    // const resp = {
+    //   conversations: [{id: "convo", name: "Answer", messages: [{message: "please provide a set of feature hypotheses with optimal models to leverage for the quantitative analysis of game stop equity.", "from": "You", "timestamp": "2024-06-05T21:44:15.549746"}, {message: null, from: "Alice", timestamp: "2024-06-05T21:52:50.240635"}]}]}
+    // dispatch(questionMessagesSuccess(resp));
   } catch (error) {
     dispatch(questionMessagesFailure(error.message));
   }
