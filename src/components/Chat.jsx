@@ -16,6 +16,8 @@ const Chat = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [selectedChatId, setSelectedChatId] = useState('current');
 
+  const [showOptions, setShowOptions] = useState(false);
+
   const [responseMessages, setResponseMessages] = useState([]);
 
   const handleEditClick = (index) => {
@@ -37,7 +39,7 @@ const Chat = () => {
 
   useEffect(() => {
     setEditedChat(questionMessagesResponse?.conversations);
-  }, [questionMessagesResponse]);
+  }, [questionMessagesResponse, showOptions]);
 
   useEffect(() => {
     setChats(questionMessagesResponse?.conversations);
@@ -70,7 +72,7 @@ const Chat = () => {
     }
   };
 
-  const handleChangeChats = (chatId) => {
+  const handleChangeChats = (chatId, showOptionsVal=false) => {
     setSelectedChatId(chatId);
 
     if (chatId === 'current') {
@@ -79,6 +81,7 @@ const Chat = () => {
       const { messages } = (chats || []).filter(chat => chat.id === chatId)?.[0] || {};
       setResponseMessages(messages);
     }
+    setShowOptions(showOptionsVal);
   };
 
   const formatTimestamp = (timestamp) => {
@@ -96,46 +99,59 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       {!!chats?.length && (
-        <div className="bg-gray-200 p-2 flex items-center justify-between overflow-x-auto">
-          {(chats || []).map((chat, index) => (
+        <div className="bg-gray-200 p-2 flex items-center justify-between">
+          <div className="flex items-center overflow-x-auto">
+            {showOptions && (chats || []).map((chat, index) => (
+              <div
+                key={index}
+                className={`p-2 rounded mr-2 cursor-pointer ${selectedChatId === chat.id ? 'bg-green-200' : 'bg-white shadow'}`}
+                onClick={() => handleChangeChats(chat?.id)}
+              >
+                {index === editIndex ? (
+                  <div>
+                    <input
+                      type="text"
+                      value={editedChat}
+                      onChange={(e) => setEditedChat(e.target.value)}
+                      className="mr-2"
+                    />
+                    <button
+                      onClick={() => { handleSaveClick({ id: chat.id, name: editedChat }) }}
+                      className="bg-blue-500 text-white p-1 rounded"
+                    >
+                      Save
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    {chat?.name}
+                    <FiEdit2
+                      onClick={() => handleEditClick(index)}
+                      className="ml-2 cursor-pointer"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex">
             <div
-              key={index}
-              className={`p-2 rounded mr-2 cursor-pointer ${selectedChatId === chat.id ? 'bg-blue-500' : 'bg-white shadow'}`}
-              onClick={() => handleChangeChats(chat?.id)}
+              className={`p-2 rounded mr-2 cursor-pointer ${selectedChatId === 'current' ? 'bg-blue-500 text-white' : 'bg-white shadow'}`} 
+              onClick={() => handleChangeChats('current')}
             >
-              {index === editIndex ? (
-                <div>
-                  <input
-                    type="text"
-                    value={editedChat}
-                    onChange={(e) => setEditedChat(e.target.value)}
-                    className="mr-2"
-                  />
-                  <button
-                    onClick={() => { handleSaveClick({ id: chat.id, name: editedChat }) }}
-                    className="bg-blue-500 text-white p-1 rounded"
-                  >
-                    Save
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center">
-                  {chat?.name}
-                  <FiEdit2
-                    onClick={() => handleEditClick(index)}
-                    className="ml-2 cursor-pointer"
-                  />
-                </div>
-              )}
+              Current Chat
             </div>
-          ))}
-          <div
-            className={`p-2 rounded mr-2 cursor-pointer ${selectedChatId === 'current' ? 'bg-blue-500 text-white' : 'bg-white shadow'}`} // Current Chat Tab
-            onClick={() => handleChangeChats('current')}
-          >
-            Current Chat
+            {chats.length && 
+              <div className={`p-2 rounded mr-2 cursor-pointer ${selectedChatId !== 'current' ? 'bg-blue-500 text-white' : 'bg-white shadow'}`}
+                onClick={() => {
+                  const showOptionsVal = true;
+                  handleChangeChats(chats?.[0]?.id, showOptionsVal);
+                }}
+              >
+                QnA
+              </div>}
           </div>
         </div>
       )}
@@ -153,7 +169,7 @@ const Chat = () => {
             <div
               key={message.id}
               className={`mb-2 p-2 rounded shadow max-w-md ${
-                message.sender === 'user' ? 'bg-white self-start' : 'bg-gray-300 self-end'
+                message.sender === 'user' ? `${showOptions ? 'bg-green-200' : 'bg-white'} self-start` : 'bg-gray-300 self-end'
               }`}
               style={{ marginLeft: message.sender === 'alice' ? 'inherit' : 'auto' }}
             >
