@@ -7,18 +7,17 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
 
-  const navigate = useNavigate();
-
   const { loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
-  let { isAuthenticated } = useAuth0()
   const [showLogout, setShowLogout] = useState(false);
 
   // const noToken = localStorage.getItem('myItem') === null
 
+  const [isAuth, setisAuth] = useState(useAuth0())
+
   useEffect(() => {
     const getToken = async () => {
       try {
-        if (isAuthenticated) {
+        if (isAuth) {
           const token = await getAccessTokenSilently();
           localStorage.setItem('authToken', token); // Store token in localStorage
         }
@@ -27,20 +26,20 @@ const LoginPage = () => {
       }
     };
     getToken();
-  }, [isAuthenticated, getAccessTokenSilently]);
+  }, [isAuth, getAccessTokenSilently]);
 
   const handleLogout = () => {
     logout({ returnTo: window.location.origin });
     localStorage.removeItem('authToken'); // Remove token from localStorage
-    isAuthenticated = false
-    navigate('/logout') 
+    setisAuth(false)
+    // navigate('/logout') 
   };
 
   const toggleLogout = () => {
     setShowLogout(!showLogout);
   };
 
-  return (!isAuthenticated) ? (
+  return (!isAuth) ? (
     <div className="flex h-screen items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-96 text-center"> 
         <h1 className="text-3xl text-blue-600 font-bold mb-6">ASSIST</h1>
