@@ -11,6 +11,8 @@ const Chat = () => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
 
+  const token = localStorage.getItem('authToken');
+
   const [chats, setChats] = useState([]);
   const [editedChat, setEditedChat] = useState('');
   const [editIndex, setEditIndex] = useState(null);
@@ -53,7 +55,7 @@ const Chat = () => {
   useEffect(() => {
     dispatch(chatMessages());
     dispatch(questionMessages());
-  }, [dispatch]);
+  }, [dispatch, token]);
 
   useEffect(() => {
     scrollToBottom();

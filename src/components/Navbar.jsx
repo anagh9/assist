@@ -16,6 +16,8 @@ import { setLogNewResearch } from '../features/logNewResearchSlice';
 const Navbar = () => {
   const navigate = useNavigate();
 
+  const token = localStorage.getItem('authToken');
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [researchTitle, setResearchTitle] = useState('');
@@ -29,7 +31,7 @@ const Navbar = () => {
 
   useEffect(() => {
     dispatch(fetchData());
-  }, [dispatch]);
+  }, [dispatch, token]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -97,7 +99,7 @@ const Navbar = () => {
   return (
     <div className="relative h-screen w-64 bg-gray-800 text-white flex flex-col">
       <div className="p-4 text-2xl font-bold text-center">ASSIST</div>
-      <nav className="flex-grow overflow-y-auto">
+      <nav className="flex-grow overflow-y-auto" style={{ height: 'calc(75vh)' }}>
         <ul className="space-y-2 p-4">
           <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600" key={'newResearch'} onClick={openModal}>
             <button className="block">{'New Research'}</button>
