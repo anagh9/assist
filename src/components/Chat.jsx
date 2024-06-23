@@ -72,7 +72,7 @@ const Chat = () => {
     }
   };
 
-  const handleChangeChats = (chatId, showOptionsVal=false) => {
+  const handleChangeChats = (chatId, showOptionsVal = false) => {
     setSelectedChatId(chatId);
 
     if (chatId === 'current') {
@@ -100,14 +100,14 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col">
-      {!!chats?.length && (
+      {(
         <div className="bg-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center overflow-x-auto">
             {showOptions && (chats || []).map((chat, index) => (
               <div
                 key={index}
                 className={`p-2 rounded mr-2 cursor-pointer ${selectedChatId === chat.id ? 'bg-green-200' : 'bg-white shadow'}`}
-                onClick={() => handleChangeChats(chat?.id)}
+                onClick={() => handleChangeChats(chat?.id, true)}
               >
                 {index === editIndex ? (
                   <div>
@@ -138,12 +138,12 @@ const Chat = () => {
           </div>
           <div className="flex">
             <div
-              className={`p-2 rounded mr-2 cursor-pointer ${selectedChatId === 'current' ? 'bg-blue-500 text-white' : 'bg-white shadow'}`} 
+              className={`p-2 rounded mr-2 cursor-pointer ${selectedChatId === 'current' ? 'bg-blue-500 text-white' : 'bg-white shadow'}`}
               onClick={() => handleChangeChats('current')}
             >
               Current Chat
             </div>
-            {chats.length && 
+            {
               <div className={`p-2 rounded mr-2 cursor-pointer ${selectedChatId !== 'current' ? 'bg-blue-500 text-white' : 'bg-white shadow'}`}
                 onClick={() => {
                   const showOptionsVal = true;

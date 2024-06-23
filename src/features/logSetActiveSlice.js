@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logsApi } from '../Api';
+import { fetchData } from './logSlice';
 
 const logSetActiveSlice = createSlice({
   name: 'logSetActive',
@@ -29,21 +30,31 @@ const logSetActiveSlice = createSlice({
 export const { setLogActiveRequest, setLogActiveSuccess, setLogActiveFailure } = logSetActiveSlice.actions;
 
 export const setLogActive = (payload) => async (dispatch) => {
-  const {path, active} = payload || {}
+  const {path, name, active} = payload || {}
   dispatch(setLogActiveRequest());
   if(path){
     const token = localStorage.getItem('authToken');
 
   try {
-    const response = await axios.put(`${logsApi}/${path}`, {active}, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    let response = {}
+    if(name){
+      response = await axios.put(`${logsApi}/${path}`, {name}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+    }else if(active){
+      response = await axios.put(`${logsApi}/${path}`, {active}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+    }
     dispatch(setLogActiveSuccess(response.data));
   } catch (error) {
     dispatch(setLogActiveFailure(error.message));
   }
+  dispatch(fetchData());
 }
 };
 

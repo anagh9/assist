@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { FiEdit2 } from 'react-icons/fi';
+import { FaCheck } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+
 import { fetchData } from '../features/logSlice';
 import { setLogActive } from '../features/logSetActiveSlice';
 import { viewResearch } from '../features/viewResearchSlice';
 import { viewAnalysis } from '../features/viewAnalysisSlice';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -15,16 +18,31 @@ const Navbar = () => {
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [researchTitle, setResearchTitle] = useState('');
+  const [editingLog, setEditingLog] = useState(null);
+  const [newLogName, setNewLogName] = useState('');
 
-  const [researchTitle, setResearchTitle] = useState('')
-
-  const { loading, data: logResponse } = useSelector(state => state.logs) || {};
+  const { loading, data: logResponse } = useSelector((state) => state.logs) || {};
 
   const dispatch = useDispatch();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     dispatch(fetchData());
   }, [dispatch]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setSelectedItem(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleItemClick = (item) => {
     setSelectedItem(selectedItem === item ? null : item);
@@ -32,6 +50,7 @@ const Navbar = () => {
 
   const handleSetAsActive = (path) => {
     dispatch(setLogActive({ path, active: true }));
+    setSelectedItem(null); // Close dropdown after setting as active
   };
 
   const handleViewResearch = (path) => {
@@ -54,10 +73,26 @@ const Navbar = () => {
 
   const handleNewResearch = (event) => {
     event.preventDefault();
-    dispatch(setLogNewResearch(researchTitle))
+    dispatch(setLogNewResearch(researchTitle));
     setIsModalOpen(false);
     setResearchTitle('');
   };
+
+  const handleEditClick = (log) => {
+    setEditingLog(log.path);
+    setNewLogName(log.name);
+  };
+
+  const handleEditChange = (event) => {
+    setNewLogName(event.target.value);
+  };
+
+  const handleEditSubmit = (log) => {
+    dispatch(setLogActive({ name: newLogName, path: log.path }));
+    setEditingLog(null);
+  };
+
+  const uniqueNames = new Set();
 
   return (
     <div className="relative h-screen w-64 bg-gray-800 text-white flex flex-col">
@@ -68,28 +103,57 @@ const Navbar = () => {
             <button className="block">{'New Research'}</button>
           </li>
           {loading ? (
-            <p>Loading...</p>
+            <div className="spinner" />
           ) : (
-            (logResponse || []).filter(log => !log.name.toLowerCase().includes('summary')).map(log => (
-              <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600" key={log.id} onClick={() => handleItemClick(log.name)}>
-                <button className="block">{log.name}</button>
-                {selectedItem === log.name && (
-                  <div className="absolute left-full ml-2 w-64 bg-gray-800 bg-opacity-75 text-white rounded-lg shadow-lg z-10">
-                    <ul className="space-y-2 p-4">
-                      <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">
-                        <button className="block" onClick={() => handleSetAsActive(log.path)}>Set as Active</button>
-                      </li>
-                      <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">
-                        <button className="block" onClick={() => handleViewResearch(log.path)}>View Research</button>
-                      </li>
-                      <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">
-                        <button className="block" onClick={() => handleViewAnalysis(log.path)}>View Analysis</button>
-                      </li>
-                    </ul>
+            (logResponse || [])
+              .filter((log) => !log.name.toLowerCase().includes('summary'))
+              .filter((log) => {
+                if (uniqueNames.has(log.name)) {
+                  return false;
+                }
+                uniqueNames.add(log.name);
+                return true;
+              })
+              .map((log) => (
+                <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 flex flex-col relative" key={log.path}>
+                  <div className="flex items-center justify-between">
+                    {editingLog === log.path ? (
+                      <div className="block flex-1 text-left relative">
+                        <input
+                          type="text"
+                          value={newLogName}
+                          onChange={handleEditChange}
+                          className="flex-1 bg-gray-600 text-white px-2 py-1 rounded-lg mr-2"
+                        />
+                        <FaCheck
+                          onClick={() => handleEditSubmit(log)}
+                          className="text-green-500 cursor-pointer absolute top-1/2 right-2 transform -translate-y-1/2"
+                        />
+                      </div>
+                    ) : (
+                      <button className="block flex-1 text-left" onClick={() => handleItemClick(log.name)}>
+                        {log.name}
+                      </button>
+                    )}
+                    <FiEdit2 onClick={() => handleEditClick(log)} className="ml-2 cursor-pointer" />
                   </div>
-                )}
-              </li>
-            ))
+                  {selectedItem === log.name && (
+                    <div className="absolute left-0 right-0 mt-8 bg-blue-200 text-gray-800 rounded-lg shadow-lg z-10" ref={dropdownRef}>
+                      <ul className="space-y-2 p-4">
+                        <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">
+                          <button className="block" onClick={() => handleSetAsActive(log.path)}>Set as Active</button>
+                        </li>
+                        <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">
+                          <button className="block" onClick={() => handleViewResearch(log.path)}>View Research</button>
+                        </li>
+                        <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">
+                          <button className="block" onClick={() => handleViewAnalysis(log.path)}>View Analysis</button>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </li>
+              ))
           )}
         </ul>
       </nav>
@@ -123,8 +187,8 @@ const Navbar = () => {
             </form>
           </div>
         </div>
-        )}
-      </div>
+      )}
+    </div>
   );
 };
 
