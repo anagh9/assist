@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Navbar from './Navbar'; // Assuming you have a Navbar component
 import Chat from './Chat'; // Assuming you have a Chat component
 import { FaUserCircle } from 'react-icons/fa'; // Assuming you are using react-icons for the user icon
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
 
