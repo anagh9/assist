@@ -58,7 +58,8 @@ const Chat = () => {
       setResponseMessages(messages || []);
     }
     scrollToBottom();
-  }, [questionMessagesResponse?.conversations, chatMessagesResponse?.history, isQuestion, selectedChatId]);
+  }, [questionMessagesResponse?.conversations, chatMessagesResponse?.history, isQuestion, 
+    selectedChatId, questionMessagesResponse?.status?.busy, chatMessagesResponse?.status?.busy]);
 
   const dispatch = useDispatch();
 

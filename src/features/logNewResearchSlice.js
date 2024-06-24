@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logsApi, questionLogsApi } from '../Api';
 import { fetchData } from './logSlice';
-import { useSelector } from 'react-redux';
 
 const logNewResearchSlice = createSlice({
   name: 'logNewResearch',
