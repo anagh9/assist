@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { logsApi } from '../Api';
+import { logsApi, questionLogsApi } from '../Api';
 
 const logSlice = createSlice({
   name: 'logs',
@@ -28,14 +28,16 @@ const logSlice = createSlice({
 
 export const { fetchDataRequest, fetchDataSuccess, fetchDataFailure } = logSlice.actions;
 
-export const fetchData = () => async (dispatch) => {
+export const fetchData = () => async (dispatch, getState) => {
 
-  let response = []
+  const isQuestion = getState().isQuestion;
+
+  let response = {}
   dispatch(fetchDataRequest());
   const token = localStorage.getItem('authToken');
 
   try {
-    response = await axios.get(logsApi, {
+    response = await axios.get(isQuestion ? questionLogsApi : logsApi, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

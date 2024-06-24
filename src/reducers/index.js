@@ -7,6 +7,7 @@ import chatMessagesReducer from '../features/chatMessagesSlice';
 import questionMessagesReducer from '../features/questionMessagesSlice';
 import promptReducer from '../features/promptSlice';
 import logNewResearchReducer from '../features/logNewResearchSlice';
+import isQuestionReducer from '../features/isQuestionSlice'
 
 const rootReducer = combineReducers({
   logs: logReducer,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   viewAnalysis: viewAnalysisReducer,
   chatMessages: chatMessagesReducer,
   questionMessages: questionMessagesReducer,
-  prompt: promptReducer
+  prompt: promptReducer,
+  isQuestion: isQuestionReducer 
 });
 
 export default rootReducer;

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { logsApi } from '../Api';
+import { logsApi, questionLogsApi } from '../Api';
 
 const viewResearchSlice = createSlice({
   name: 'viewResearch',
@@ -28,14 +28,18 @@ const viewResearchSlice = createSlice({
 
 export const { viewResearchRequest, viewResearchSuccess, viewResearchFailure } = viewResearchSlice.actions;
 
-export const viewResearch = (payload) => async (dispatch) => {
+export const viewResearch = (payload) => async (dispatch, getState) => {
+
+  const isQuestion = getState().isQuestion;
+
   const {viewResearchPath} = payload || {}
   dispatch(viewResearchRequest());
   if(viewResearchPath){
     const token = localStorage.getItem('authToken');
 
+  let response = {}
   try {
-    const response = await axios.get(`${logsApi}/${viewResearchPath}`, {
+    response = await axios.get(`${isQuestion ? questionLogsApi : logsApi}/${viewResearchPath}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

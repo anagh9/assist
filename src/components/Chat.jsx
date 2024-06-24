@@ -6,12 +6,15 @@ import { chatMessages } from '../features/chatMessagesSlice';
 import { questionMessages } from '../features/questionMessagesSlice';
 import { questionMessagesEdit } from '../features/questionMessagesEditSlice';
 import { prompt } from '../features/promptSlice';
+import { setIsQuestion } from '../features/isQuestionSlice';
 
 const Chat = () => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
 
   const token = localStorage.getItem('authToken');
+
+  const [aliceBusy, setAliceBusy] = useState(false);
 
   const [chats, setChats] = useState([]);
   const [editedChat, setEditedChat] = useState('');
@@ -21,6 +24,8 @@ const Chat = () => {
   const [showOptions, setShowOptions] = useState(false);
 
   const [responseMessages, setResponseMessages] = useState([]);
+
+  const isQuestion = useSelector(state => state.isQuestion);
 
   const handleEditClick = (index) => {
     setEditIndex(index);
@@ -37,25 +42,44 @@ const Chat = () => {
   };
 
   const { data: chatMessagesResponse } = useSelector(state => state.chatMessages) || {};
-  const { loading, data: questionMessagesResponse } = useSelector(state => state.questionMessages) || {};
+  const { data: questionMessagesResponse } = useSelector(state => state.questionMessages) || {};
 
   useEffect(() => {
     setEditedChat(questionMessagesResponse?.conversations);
   }, [questionMessagesResponse, showOptions]);
 
   useEffect(() => {
+    setAliceBusy(isQuestion ?  questionMessagesResponse?.status?.busy : chatMessagesResponse?.status?.busy) 
     setChats(questionMessagesResponse?.conversations);
-    setResponseMessages(chatMessagesResponse?.history);
-    setSelectedChatId('current');
+    if(selectedChatId === 'current'){
+      setResponseMessages(chatMessagesResponse?.history);
+    }else{
+      const { messages } = (chats || []).filter(chat => chat.id === selectedChatId)?.[0] || {};
+      setResponseMessages(messages || []);
+    }
     scrollToBottom();
-  }, [questionMessagesResponse?.conversations, chatMessagesResponse?.history]);
+  }, [questionMessagesResponse?.conversations, chatMessagesResponse?.history, isQuestion, selectedChatId]);
 
   const dispatch = useDispatch();
 
+  const loading = false
+
   useEffect(() => {
+
     dispatch(chatMessages());
     dispatch(questionMessages());
-  }, [dispatch, token]);
+
+    const intervalId = setInterval(() => {
+      if(isQuestion){
+        dispatch(questionMessages());
+      }else{
+        dispatch(chatMessages());
+      }
+      
+    }, 10000); 
+
+    return () => clearInterval(intervalId); 
+  }, [dispatch, token, isQuestion]);
 
   useEffect(() => {
     scrollToBottom();
@@ -78,10 +102,12 @@ const Chat = () => {
     setSelectedChatId(chatId);
 
     if (chatId === 'current') {
+      dispatch(setIsQuestion(false))
       setResponseMessages(chatMessagesResponse?.history);
     } else {
+      dispatch(setIsQuestion(true))
       const { messages } = (chats || []).filter(chat => chat.id === chatId)?.[0] || {};
-      setResponseMessages(messages);
+      setResponseMessages(messages || []);
     }
     setShowOptions(showOptionsVal);
   };
@@ -188,16 +214,17 @@ const Chat = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="flex-grow p-2 border rounded mr-2"
-          placeholder="Type a message..."
+          placeholder={aliceBusy ? 'Alice is Busy' : 'Type a message...'}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               handleSendMessage();
             }
           }}
+          disabled={aliceBusy}
         />
         <button
           onClick={() => handleSendMessage()}
-          className="p-2 bg-blue-500 text-white rounded flex-shrink-0"
+          className={`p-2 ${aliceBusy ? 'bg-gray-500':'bg-blue-500'} text-white rounded flex-shrink-0`}
         >
           <FaArrowUp />
         </button>

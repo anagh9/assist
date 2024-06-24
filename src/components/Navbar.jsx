@@ -26,12 +26,14 @@ const Navbar = () => {
 
   const { loading, data: logResponse } = useSelector((state) => state.logs) || {};
 
+  const isQuestion = useSelector(state => state.isQuestion);
+
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     dispatch(fetchData());
-  }, [dispatch, token]);
+  }, [dispatch, token, isQuestion]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -50,8 +52,8 @@ const Navbar = () => {
     setSelectedItem(selectedItem === item ? null : item);
   };
 
-  const handleSetAsActive = (path) => {
-    dispatch(setLogActive({ path, active: true }));
+  const handleSetAsActive = (path, active) => {
+    dispatch(setLogActive({ path, active }));
     setSelectedItem(null); // Close dropdown after setting as active
   };
 
@@ -117,7 +119,7 @@ const Navbar = () => {
                 return true;
               })
               .map((log) => (
-                <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 flex flex-col relative" key={log.path}>
+                <li className={`px-4 py-2 ${log.active ? 'bg-green-600 hover:bg-green-500' : 'bg-gray-700 hover:bg-gray-600'} rounded-lg flex flex-col relative`} key={log.path}>
                   <div className="flex items-center justify-between">
                     {editingLog === log.path ? (
                       <div className="block flex-1 text-left relative">
@@ -143,7 +145,11 @@ const Navbar = () => {
                     <div className="absolute left-0 right-0 mt-8 bg-blue-200 text-gray-800 rounded-lg shadow-lg z-10" ref={dropdownRef}>
                       <ul className="space-y-2 p-4">
                         <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">
-                          <button className="block" onClick={() => handleSetAsActive(log.path)}>Set as Active</button>
+                          {
+                            log.active ? 
+                            <button className="block" onClick={() => handleSetAsActive(log.path, false)}>Set as DeActive</button> :
+                            <button className="block" onClick={() => handleSetAsActive(log.path, true)}>Set as Active</button>
+                          }
                         </li>
                         <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">
                           <button className="block" onClick={() => handleViewResearch(log.path)}>View Research</button>
