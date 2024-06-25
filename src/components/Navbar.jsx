@@ -100,7 +100,7 @@ const Navbar = () => {
 
   return (
     <div className="relative h-screen w-64 bg-gray-800 text-white flex flex-col">
-      <div className="p-4 text-2xl font-bold text-center">ASSIST</div>
+      <div className="p-4 text-2xl font-bold text-center">AISSIST</div>
       <nav className="flex-grow overflow-y-auto" style={{ height: 'calc(75vh)' }}>
         <ul className="space-y-2 p-4">
           <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600" key={'newResearch'} onClick={openModal}>
@@ -146,7 +146,7 @@ const Navbar = () => {
                       <ul className="space-y-2 p-4">
                         <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">
                           {
-                            log.active ? 
+                            log.active && isQuestion ? 
                             <button className="block" onClick={() => handleSetAsActive(log.path, false)}>Set as DeActive</button> :
                             <button className="block" onClick={() => handleSetAsActive(log.path, true)}>Set as Active</button>
                           }
