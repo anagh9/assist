@@ -26,6 +26,7 @@ const LoginPage = () => {
   const handleLogout = () => {
     logout({ returnTo: window.location.origin });
     localStorage.removeItem('authToken'); // Remove token from localStorage
+    window.location.reload();
   };
 
   const toggleLogout = () => {
