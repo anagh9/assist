@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { logsApi, questionLogsApi } from '../Api';
+import { logsApi } from '../Api';
 import { fetchData } from './logSlice';
 
 const logNewResearchSlice = createSlice({
@@ -35,9 +35,8 @@ export const setLogNewResearch = (payload) => async (dispatch, getState) => {
   const token = localStorage.getItem('authToken');
 
   let response = {}
-  const isQuestion = getState().isQuestion;
   try {
-    response = await axios.post(isQuestion ? questionLogsApi : logsApi, {name:payload}, {
+    response = await axios.post(logsApi, {name:payload}, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

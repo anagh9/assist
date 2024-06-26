@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { promptApi } from '../Api';
+import { promptApi, questionApi } from '../Api';
 import { chatMessages } from './chatMessagesSlice';
 
 const promptSlice = createSlice({
@@ -29,20 +29,30 @@ const promptSlice = createSlice({
 
 export const { promptRequest, promptSuccess, promptFailure } = promptSlice.actions;
 
-export const prompt = (payload) => async (dispatch) => {
+export const prompt = (payload) => async (dispatch, getState) => {
 
-  const {input} = payload
+  const {input, id} = payload
 
   let response = []
   dispatch(promptRequest());
   const token = localStorage.getItem('authToken');
 
+  const isQuestion = getState().isQuestion;
+
   try {
-    response = await axios.post(promptApi, {input}, {
+    if(isQuestion){
+      response = await axios.post(questionApi, {input, conversation_id:id}, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
+    }else{
+      response = await axios.post(promptApi, {input}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+    }
     dispatch(promptSuccess(response.data));
   } catch (error) {
     dispatch(promptFailure(error.message));

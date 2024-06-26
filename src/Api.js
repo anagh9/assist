@@ -11,3 +11,5 @@ export const messagesApi = `${baseUrl}/messages`
 export const questionMessagesApi = `${baseUrl}/question_messages`
 
 export const promptApi = `${baseUrl}/prompt`
+
+export const questionApi = `${baseUrl}/question`

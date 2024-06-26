@@ -94,7 +94,7 @@ const Chat = () => {
 
   const handleSendMessage = () => {
     if ((input || '').trim()) {
-      dispatch(prompt({ input }));
+      dispatch(prompt({ input, id: selectedChatId }));
       setInput('');
     }
   };
