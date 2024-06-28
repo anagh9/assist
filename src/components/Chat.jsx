@@ -234,7 +234,7 @@ const Chat = () => {
         {aliceBusy &&
           <button
           onClick={() => handleKill()}
-          className={`p-2 ${killDone ? 'bg-gray-500':'bg-blue-500'} text-white rounded flex-shrink-0 mr-2`}
+          className={`p-2 ${killDone ? 'bg-gray-500':'bg-red-500'} text-white rounded flex-shrink-0 mr-2`}
         >
           Kill
         </button>}
