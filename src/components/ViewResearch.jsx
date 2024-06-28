@@ -13,10 +13,6 @@ const ViewResearch = () => {
 
   const [killDone, setKillDone] = useState(false)
 
-
-  console.log({viewResearchResponse})
-
-
   const [researchText, setResearchText] = useState('');
 
   const textContainerRef = useRef(null);

@@ -7,6 +7,7 @@ import { questionMessages } from '../features/questionMessagesSlice';
 import { questionMessagesEdit } from '../features/questionMessagesEditSlice';
 import { prompt } from '../features/promptSlice';
 import { setIsQuestion } from '../features/isQuestionSlice';
+import { kill } from '../features/killSlice'
 
 const Chat = () => {
   const [input, setInput] = useState('');
@@ -127,6 +128,13 @@ const Chat = () => {
     return `${dateString} ${timeString}`;
   };
 
+  const [killDone, setKillDone] = useState(false)
+
+  const handleKill = () => {
+    dispatch(kill())
+    setKillDone(true)
+  };
+
   return (
     <div className="flex flex-col">
       {(
@@ -223,6 +231,13 @@ const Chat = () => {
           }}
           disabled={aliceBusy}
         />
+        {aliceBusy &&
+          <button
+          onClick={() => handleKill()}
+          className={`p-2 ${killDone ? 'bg-gray-500':'bg-blue-500'} text-white rounded flex-shrink-0 mr-2`}
+        >
+          Kill
+        </button>}
         <button
           onClick={() => handleSendMessage()}
           className={`p-2 ${aliceBusy ? 'bg-gray-500':'bg-blue-500'} text-white rounded flex-shrink-0`}
