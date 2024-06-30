@@ -13,6 +13,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setLogNewResearch } from '../features/logNewResearchSlice';
 
+import { setNamePathSlice } from '../features/namePathSlice';
+
 const Navbar = () => {
   const navigate = useNavigate();
 
@@ -57,7 +59,8 @@ const Navbar = () => {
     setSelectedItem(null); // Close dropdown after setting as active
   };
 
-  const handleViewResearch = (path) => {
+  const handleViewResearch = (name, path) => {
+    dispatch(setNamePathSlice({name, path}))
     dispatch(viewResearch({ viewResearchPath: path }));
     navigate('/viewResearch');
   };
@@ -152,7 +155,7 @@ const Navbar = () => {
                           }
                         </li>
                         <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">
-                          <button className="block" onClick={() => handleViewResearch(log.path)}>View Research</button>
+                          <button className="block" onClick={() => handleViewResearch(log.name, log.path)}>View Research</button>
                         </li>
                         <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">
                           <button className="block" onClick={() => handleViewAnalysis(log.path)}>View Analysis</button>

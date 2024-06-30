@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaPause, FaChevronLeft } from 'react-icons/fa';
+import { FaPause, FaChevronLeft, FaFileAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { kill } from '../features/killSlice'
+import { summary } from '../features/summarySlice';
 
 
 const ViewResearch = () => {
@@ -13,10 +14,14 @@ const ViewResearch = () => {
 
   const [killDone, setKillDone] = useState(false)
 
+  const [summaryDone, setSummaryDone] = useState(false)
+
   const [researchText, setResearchText] = useState('');
 
   const textContainerRef = useRef(null);
   const navigate = useNavigate();
+
+  const {name='', path=''} = useSelector(state => state.namePath);
 
   useEffect(() => {
     setResearchText(viewResearchResponse)
@@ -29,6 +34,11 @@ const ViewResearch = () => {
 
   const handleScrollLeft = () => {
     navigate('/home');
+  };
+
+  const handleSummarize = () => {
+    dispatch(summary({name, path}))
+    setSummaryDone(true)
   };
 
   return (
@@ -62,6 +72,15 @@ const ViewResearch = () => {
         >
           <FaPause className="mr-2" />
           Kill
+        </button>
+        <button
+          className={`${
+            summaryDone ? 'bg-gray-200 cursor-not-allowed' : 'bg-green-500 hover:bg-green-700'
+          } text-white font-bold py-2 px-4 rounded flex items-center`}
+          onClick={handleSummarize}
+        >
+          <FaFileAlt className="mr-2" />
+          Summarize
         </button>
       </div>
     </div>

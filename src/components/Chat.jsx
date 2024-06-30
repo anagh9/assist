@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaArrowUp } from 'react-icons/fa';
-import { FiEdit2 } from 'react-icons/fi';
+import { FiEdit2, FiPlus } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import { chatMessages } from '../features/chatMessagesSlice';
 import { questionMessages } from '../features/questionMessagesSlice';
@@ -8,6 +8,10 @@ import { questionMessagesEdit } from '../features/questionMessagesEditSlice';
 import { prompt } from '../features/promptSlice';
 import { setIsQuestion } from '../features/isQuestionSlice';
 import { kill } from '../features/killSlice'
+import { createQuestion } from '../features/createQuestionSlice'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+
 
 const Chat = () => {
   const [input, setInput] = useState('');
@@ -26,7 +30,11 @@ const Chat = () => {
 
   const [responseMessages, setResponseMessages] = useState([]);
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const isQuestion = useSelector(state => state.isQuestion);
+
+  const [chatTitle, setChatTitle] = useState('')
 
   const handleEditClick = (index) => {
     setEditIndex(index);
@@ -135,11 +143,29 @@ const Chat = () => {
     setKillDone(true)
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleChatTitle = (event) => {
+    event.preventDefault();
+    dispatch(createQuestion({name: chatTitle}))
+    setIsModalOpen(false)
+    setChatTitle('')
+  }
+
   return (
     <div className="flex flex-col">
       {(
         <div className="bg-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center overflow-x-auto">
+              {showOptions && 
+              <button
+              className="p-2 rounded mr-2 bg-white shadow cursor-pointer"
+              onClick={() => {setIsModalOpen(true)}}
+              >
+                <FiPlus size={20} />
+              </button>}
             {showOptions && (chats || []).map((chat, index) => (
               <div
                 key={index}
@@ -245,6 +271,37 @@ const Chat = () => {
           <FaArrowUp />
         </button>
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+          <div className="relative bg-white p-4 rounded-lg shadow-lg text-black w-96">
+            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={closeModal}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+            <h2 className="text-2xl font-bold mb-4">New Chat</h2>
+            <form onSubmit={handleChatTitle}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="chatTitle">
+                  Chat Title
+                </label>
+                <input
+                  type="text"
+                  id="chatTitle"
+                  name="chatTitle"
+                  className="w-full px-3 py-2 border rounded-lg"
+                  placeholder="Enter title"
+                  value={chatTitle}
+                  onChange={(event) => setChatTitle(event.target.value)}
+                />
+              </div>
+              <div className="flex justify-center">
+                <button type="submit" className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
