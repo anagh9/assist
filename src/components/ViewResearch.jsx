@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { kill } from '../features/killSlice'
 import { summary } from '../features/summarySlice';
+import { viewResearch } from '../features/viewResearchSlice';
 
 
 const ViewResearch = () => {
@@ -17,6 +18,8 @@ const ViewResearch = () => {
   const [summaryDone, setSummaryDone] = useState(false)
 
   const [researchText, setResearchText] = useState('');
+
+  const { data: viewResearchPath } = useSelector(state => state.createQuestion) || {};
 
   const textContainerRef = useRef(null);
   const navigate = useNavigate();
@@ -39,6 +42,8 @@ const ViewResearch = () => {
   const handleSummarize = () => {
     dispatch(summary({name, path}))
     setSummaryDone(true)
+    const researchPath = viewResearchPath || path
+    dispatch(viewResearch({ viewResearchPath:researchPath }));
   };
 
   return (

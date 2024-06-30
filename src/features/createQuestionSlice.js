@@ -7,7 +7,7 @@ const createQuestionSlice = createSlice({
   name: 'createQuestion',
   initialState: {
     loading: false,
-    data: [],
+    data: '',
     error: ''
   },
   reducers: {

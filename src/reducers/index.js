@@ -9,6 +9,7 @@ import promptReducer from '../features/promptSlice';
 import logNewResearchReducer from '../features/logNewResearchSlice';
 import isQuestionReducer from '../features/isQuestionSlice'
 import namePathReducer from '../features/namePathSlice';
+import createQuestionReducer from '../features/createQuestionSlice'
 
 const rootReducer = combineReducers({
   logs: logReducer,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   questionMessages: questionMessagesReducer,
   prompt: promptReducer,
   isQuestion: isQuestionReducer,
-  namePath: namePathReducer
+  namePath: namePathReducer,
+  createQuestion: createQuestionReducer
 });
 
 export default rootReducer;
