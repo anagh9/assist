@@ -58,7 +58,7 @@ const ViewResearch = () => {
       </div>
       <div
         className="w-full max-w-4xl border border-gray-300 p-4 mb-4 overflow-x-auto"
-        style={{ maxHeight: '700px' }} 
+        style={{ maxHeight: '600px' }} 
       >
         {loading ? (
         <p>Loading...</p>

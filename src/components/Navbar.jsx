@@ -3,6 +3,7 @@ import { FiEdit2 } from 'react-icons/fi';
 import { FaCheck } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { fetchData } from '../features/logSlice';
 import { setLogActive } from '../features/logSetActiveSlice';
@@ -14,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { setLogNewResearch } from '../features/logNewResearchSlice';
 
 import { setNamePathSlice } from '../features/namePathSlice';
+import { logDelete } from '../features/logDeleteSlice';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -94,6 +96,10 @@ const Navbar = () => {
     setNewLogName(event.target.value);
   };
 
+  const handleDeleteLog = (log) => {
+    dispatch(logDelete(log.path))
+  };
+
   const handleEditSubmit = (log) => {
     dispatch(setLogActive({ name: newLogName, path: log.path }));
     setEditingLog(null);
@@ -142,7 +148,12 @@ const Navbar = () => {
                         {log.name}
                       </button>
                     )}
-                    <FiEdit2 onClick={() => handleEditClick(log)} className="ml-2 cursor-pointer" />
+                    {editingLog !== log.path &&
+                    <>
+                      <FiEdit2 onClick={() => handleEditClick(log)} className="ml-2 cursor-pointer" />
+                      <FontAwesomeIcon icon={faTrash} onClick={() => handleDeleteLog(log)} className="ml-2 cursor-pointer" />
+                    </>
+                    }
                   </div>
                   {selectedItem === log.name && (
                     <div className="absolute left-0 right-0 mt-8 bg-blue-200 text-gray-800 rounded-lg shadow-lg z-10" ref={dropdownRef}>
