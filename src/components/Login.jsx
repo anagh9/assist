@@ -36,7 +36,7 @@ const LoginPage = () => {
   return !isAuthenticated ? (
     <div className="flex h-screen items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-96 text-center">
-        <h1 className="text-3xl text-blue-600 font-bold mb-6">AISSIST</h1>
+        <h1 className="text-3xl text-blue-600 font-bold mb-6">ALICE</h1>
         <h2 className="text-2xl font-bold mb-6">Login to Alliance Platform</h2>
         <div className="mb-4">
           <button
