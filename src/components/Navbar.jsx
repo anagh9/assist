@@ -24,9 +24,12 @@ const Navbar = () => {
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [researchTitle, setResearchTitle] = useState('');
   const [editingLog, setEditingLog] = useState(null);
   const [newLogName, setNewLogName] = useState('');
+
+  const [deleteLog, setDeleteLog] = useState('')
 
   const { loading, data: logResponse } = useSelector((state) => state.logs) || {};
 
@@ -58,7 +61,7 @@ const Navbar = () => {
 
   const handleSetAsActive = (path, active) => {
     dispatch(setLogActive({ path, active }));
-    setSelectedItem(null); // Close dropdown after setting as active
+    setSelectedItem(null); 
   };
 
   const handleViewResearch = (name, path) => {
@@ -80,6 +83,14 @@ const Navbar = () => {
     setIsModalOpen(false);
   };
 
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
   const handleNewResearch = (event) => {
     event.preventDefault();
     dispatch(setLogNewResearch(researchTitle));
@@ -97,7 +108,14 @@ const Navbar = () => {
   };
 
   const handleDeleteLog = (log) => {
-    dispatch(logDelete(log.path))
+    openDeleteModal()
+    setDeleteLog(log)
+  };
+
+  const handleDeletedLog = (event) => {
+    event.preventDefault();
+    dispatch(logDelete(deleteLog.path))
+    closeDeleteModal()
   };
 
   const handleEditSubmit = (log) => {
@@ -204,6 +222,28 @@ const Navbar = () => {
               <div className="flex justify-center">
                 <button type="submit" className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg">
                   Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+          <div className="relative bg-white p-4 rounded-lg shadow-lg text-black w-96">
+            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={closeDeleteModal}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+            <h3 className="text-2xl font-bold mb-4">Confirm Deletion</h3>
+            <form onSubmit={handleDeletedLog}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="chatTitle">
+                  Are you sure you want to delete {deleteLog.name}
+                </label>
+              </div>
+              <div className="flex justify-center">
+                <button type="submit" className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg">
+                  Delete
                 </button>
               </div>
             </form>
