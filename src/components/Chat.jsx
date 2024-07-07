@@ -12,7 +12,6 @@ import { createQuestion } from '../features/createQuestionSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
-
 const Chat = () => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
