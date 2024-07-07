@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { logsApi, questionLogsApi } from '../Api';
+import { logsApi } from '../Api';
 import { fetchData } from './logSlice';
 
 const logDeleteSlice = createSlice({
@@ -31,15 +31,13 @@ export const { setLogDeleteRequest, setLogDeleteSuccess, setLogDeleteFailure } =
 
 export const logDelete = (payload) => async (dispatch, getState) => {
   const path = payload || ''
-  
-  const isQuestion = getState().isQuestion;
 
   if(path){
     const token = localStorage.getItem('authToken');
 
   try {
     let response = {}
-      response = await axios.delete(`${isQuestion ? questionLogsApi : logsApi}/${path}`, {
+      response = await axios.delete(`${logsApi}/${path}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

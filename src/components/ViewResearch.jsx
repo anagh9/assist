@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPause, FaChevronLeft, FaFileAlt, FaEdit, FaSave } from 'react-icons/fa';
+import { FiCopy } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { kill } from '../features/killSlice';
@@ -62,6 +63,10 @@ const ViewResearch = () => {
     setResearchText(e.target.value);
   };
 
+  const handleTextCopy = () => {
+    navigator.clipboard.writeText(researchText)
+  }
+
   return (
     <div className="flex flex-col items-center p-6">
       <div className="flex justify-between w-full max-w-4xl mt-4">
@@ -119,6 +124,14 @@ const ViewResearch = () => {
         >
           <FaPause className="mr-2" />
           Kill
+        </button>
+        <button
+          className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+          onClick={()=>{handleTextCopy()}}
+        >
+          <>
+            <FiCopy className="inline-block mr-1"/> Copy Research
+          </>
         </button>
         <button
           className={`${

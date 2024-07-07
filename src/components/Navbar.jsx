@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiEdit2 } from 'react-icons/fi';
 import { FaCheck } from 'react-icons/fa';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -179,8 +181,8 @@ const Navbar = () => {
                         <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">
                           {
                             log.active && isQuestion ? 
-                            <button className="block" onClick={() => handleSetAsActive(log.path, false)}>Set as DeActive</button> :
-                            <button className="block" onClick={() => handleSetAsActive(log.path, true)}>Set as Active</button>
+                            <button className="block" onClick={() => handleSetAsActive(log.path, false)}><AiOutlineHeart className='inline-block mr-1'/>Set as DeActive</button> :
+                            <button className="block" onClick={() => handleSetAsActive(log.path, true)}><AiFillHeart className='inline-block mr-1'/>Set as Active</button>
                           }
                         </li>
                         <li className="px-4 py-2 bg-blue-300 rounded-lg hover:bg-blue-400">

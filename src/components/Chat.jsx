@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaArrowUp } from 'react-icons/fa';
-import { FiEdit2, FiPlus } from 'react-icons/fi';
+import { FiEdit2, FiPlus, FiCopy } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import { chatMessages } from '../features/chatMessagesSlice';
 import { questionMessages } from '../features/questionMessagesSlice';
@@ -117,7 +117,7 @@ const Chat = () => {
       dispatch(setIsQuestion(true))
       const { messages } = (chats || []).filter(chat => chat.id === chatId)?.[0] || {};
       setResponseMessages(messages || []);
-    }
+          }
     setShowOptions(showOptionsVal);
   };
 
@@ -153,18 +153,33 @@ const Chat = () => {
     setChatTitle('')
   }
 
+  const handleTextCopy = () => {
+    navigator.clipboard.writeText(JSON.stringify(responseMessages))
+  }
+
   return (
     <div className="flex flex-col">
       {(
         <div className="bg-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center overflow-x-auto">
               {showOptions && 
+              <>
               <button
               className="p-2 rounded mr-2 bg-white shadow cursor-pointer"
               onClick={() => {setIsModalOpen(true)}}
               >
                 <FiPlus size={20} />
-              </button>}
+              </button>
+              <button
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+                onClick={()=>{handleTextCopy()}}
+              >
+                <>
+                  <FiCopy className="inline-block mr-1"/> Copy
+                </>
+              </button>
+              </>
+              }
             {showOptions && (chats || []).map((chat, index) => (
               <div
                 key={index}
