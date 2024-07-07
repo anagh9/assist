@@ -29,7 +29,7 @@ const ViewResearch = () => {
 
   useEffect(() => {
     setAliceBusy(isQuestion ? questionMessagesResponse?.status?.busy : chatMessagesResponse?.status?.busy);
-  }, [questionMessagesResponse?.status?.busy, chatMessagesResponse?.status?.busy]);
+  }, [isQuestion, questionMessagesResponse?.status?.busy, chatMessagesResponse?.status?.busy]);
 
   useEffect(() => {
     setResearchText(viewResearchResponse);
