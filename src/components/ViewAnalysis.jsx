@@ -10,26 +10,26 @@ const ViewAnalysis = () => {
   const dispatch = useDispatch();
   const [killDone, setKillDone] = useState(false);
 
-//   const sampleHtmlContent = `
-//   <html>
-//     <head>
-//       <style>
-//         body { font-family: Arial, sans-serif; margin: 20px; }
-//         h1 { color: #333; }
-//         p { font-size: 14px; line-height: 1.6; }
-//       </style>
-//     </head>
-//     <body>
-//       <h1>Research Title</h1>
-//       <p>This is a sample research text. It contains some <strong>bold text</strong>, <em>italic text</em>, and a list:</p>
-//       <ul>
-//         <li>Point one</li>
-//         <li>Point two</li>
-//         <li>Point three</li>
-//       </ul>
-//       <p>And here is a link to <a href="https://www.example.com" target="_blank">example.com</a>.</p>
-//     </body>
-//   </html>
+  //   const sampleHtmlContent = `
+  //   <html>
+    //     <head>
+      //       <style>
+        //         body { font-family: Arial, sans-serif; margin: 20px; }
+        //         h1 { color: #333; }
+        //         p { font-size: 14px; line-height: 1.6; }
+      //       </style>
+    //     </head>
+    //     <body>
+      //       <h1>Research Title</h1>
+      //       <p>This is a sample research text. It contains some <strong>bold text</strong>, <em>italic text</em>, and a list:</p>
+      //       <ul>
+        //         <li>Point one</li>
+        //         <li>Point two</li>
+        //         <li>Point three</li>
+      //       </ul>
+      //       <p>And here is a link to <a href="https://www.example.com" target="_blank">example.com</a>.</p>
+    //     </body>
+  //   </html>
 // `;
 
   const iframeContent = viewAnalysisResponse;
@@ -63,7 +63,7 @@ const ViewAnalysis = () => {
           <p>Loading...</p>
         ) : (
           <iframe
-            srcDoc={iframeContent}
+            srcDoc={(iframeContent || '').toString()}
             className="w-full h-full"
             style={{ border: 'none', minHeight: '600px' }}
             title="Research Content"
