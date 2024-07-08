@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { kill } from '../features/killSlice';
 
 const ViewAnalysis = () => {
-  const { loading, data: viewAnalysisResponse } = useSelector(state => state.ViewAnalysis) || {};
+  const { loading, data: viewAnalysisResponse } = useSelector(state => state.viewAnalysis) || {};
   console.log(viewAnalysisResponse)
   const dispatch = useDispatch();
   const [killDone, setKillDone] = useState(false);
