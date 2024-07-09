@@ -171,7 +171,7 @@ const Chat = () => {
                 <FiPlus size={20} />
               </button>
               <button
-                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 mx-2 rounded"
                 onClick={()=>{handleTextCopy()}}
               >
                 <>
@@ -251,9 +251,12 @@ const Chat = () => {
               style={{ marginLeft: message.sender === 'alice' ? 'inherit' : 'auto' }}
             >
               <div className="text-xs text-gray-500 mb-1">{formatTimestamp(message.timestamp)}</div>
-              {message.text}
+              {(message.text || '').split('\n').map((line, index) => (
+                <div key={index}>{line}</div>
+              ))}
+              {/* {message.text} */}
             </div>
-          ))
+          ))          
         )}
         <div ref={messagesEndRef} />
       </div>
