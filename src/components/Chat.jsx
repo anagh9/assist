@@ -57,7 +57,7 @@ const Chat = () => {
   }, [questionMessagesResponse, showOptions]);
 
   useEffect(() => {
-    setAliceBusy(isQuestion ?  questionMessagesResponse?.status?.busy : chatMessagesResponse?.status?.busy) 
+    setAliceBusy(isQuestion ?  questionMessagesResponse?.status?.question_busy : chatMessagesResponse?.status?.busy) 
     setChats(questionMessagesResponse?.conversations);
     if(selectedChatId === 'current'){
       setResponseMessages(chatMessagesResponse?.history);
