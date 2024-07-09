@@ -67,7 +67,7 @@ const Chat = () => {
     }
     scrollToBottom();
   }, [questionMessagesResponse?.conversations, chatMessagesResponse?.history, isQuestion, 
-    selectedChatId, questionMessagesResponse?.status?.busy, chatMessagesResponse?.status?.busy, chats]);
+    selectedChatId, questionMessagesResponse?.status?.question_busy, chatMessagesResponse?.status?.busy, chats]);
 
   const dispatch = useDispatch();
 
