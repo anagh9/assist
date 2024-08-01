@@ -129,7 +129,7 @@ const Navbar = () => {
   return (
     <div className="relative h-screen w-64 bg-gray-800 text-white flex flex-col">
       <div className="p-4 text-2xl font-bold text-center">ALICE</div>
-      <nav className="flex-grow overflow-y-auto" style={{ height: 'calc(75vh)' }}>
+      <nav className="flex-grow overflow-y-auto" style={{ height: '76vh' }}>
         <ul className="space-y-2 p-4">
           <li className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600" key={'newResearch'} onClick={openModal}>
             <button className="block">{'New Research'}</button>

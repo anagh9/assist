@@ -233,7 +233,7 @@ const Chat = () => {
         </div>
       )}
 
-      <div className="flex-grow p-4 bg-gray-100 overflow-y-auto" style={{ height: 'calc(75vh)' }}>
+      <div className="flex-grow p-4 bg-gray-100 overflow-y-auto" style={{ height: '70vh' }}>
         {loading ? (
           <p>Loading...</p>
         ) : (
