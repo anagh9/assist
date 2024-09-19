@@ -16,7 +16,7 @@ const Plans = () => {
   const { data: result } = useSelector((state) => state.getPlans);
 
   const extractSteps = (input) => {
-    const stepsArray = input.split(",").map((step) => step.trim());
+    const stepsArray = (input || []).map((step) => step.trim());
 
     return stepsArray.map((step) => step.replace(/^Step \d+:\s*/, ""));
   };
