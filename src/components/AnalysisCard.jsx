@@ -9,12 +9,14 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-const AnalysisCard = ({ title, news, steps, progress, timestamp }) => {
+const AnalysisCard = ({ title, news, steps, progress, timestamp, 
+  setUpdatedSteps, setUpdatedProgress, setUpdatedTitle }) => {
   const regex = /Step (\d+)/;
 
   const date = new Date(timestamp);
 
-  const [progressStep, setProgressStep] = useState(progress.match(regex)[1]);
+  const [progressStep, setProgressStep] = useState(typeof(progress) === 'string' ?
+   progress.match(regex)[1]: progress);
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentProgress, setCurrentProgress] = useState(progressStep);
   const [currentSteps, setCurrentSteps] = useState(steps);
@@ -41,6 +43,8 @@ const AnalysisCard = ({ title, news, steps, progress, timestamp }) => {
     const updatedSteps = [...currentSteps];
     updatedSteps[index] = editedStep;
     setCurrentSteps(updatedSteps);
+    setUpdatedSteps(updatedSteps);
+    setUpdatedTitle(title);
     setEditingStepIndex(null);
   };
 
@@ -73,6 +77,7 @@ const AnalysisCard = ({ title, news, steps, progress, timestamp }) => {
           maxStep={currentProgress}
           onMaxStepChange={handleMaxStepChange}
           onStepChange={handleStepChange}
+          setUpdatedProgress={setUpdatedProgress}
         />
         <span className="text-gray-600">{date.toLocaleDateString()}</span>
       </div>

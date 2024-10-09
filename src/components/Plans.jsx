@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { FaHome, FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,6 +13,20 @@ const Plans = () => {
     navigate("/home");
   };
 
+  const getCurrentTimestamp = () => {
+    const now = new Date();
+  
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); 
+    const day = String(now.getDate()).padStart(2, '0');
+  
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+  
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  };
+
   const { data: result } = useSelector((state) => state.getPlans);
 
   const extractSteps = (input) => {
@@ -21,10 +35,25 @@ const Plans = () => {
     return stepsArray.map((step) => step.replace(/^Step \d+:\s*/, ""));
   };
 
+  const [updatedSteps, setUpdatedSteps] = useState([])
+  const [updatedProgress, setUpdatedProgress] = useState('')
+  const [updatedTitle, setUpdatedTitle] = useState('')
+
   const handleSubmit = () => {
-    dispatch(postPlans({ result }));
+    if(updatedSteps?.length && updatedProgress){
+      
+    const updatedStepsWithStep = (updatedSteps || []).map((step, index) => `Step ${index + 1}: ${step}`);
+
+    dispatch(postPlans({res:{plan: {
+      progress: `Step ${updatedProgress}`,
+      steps: updatedStepsWithStep,
+      title: updatedTitle,
+      timestamp: getCurrentTimestamp()
+    } }} ));
+  }
     navigate("/home");
   };
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -49,6 +78,9 @@ const Plans = () => {
             steps={extractSteps(item?.steps)}
             progress={item.progress}
             timestamp={item.timestamp}
+            setUpdatedSteps={setUpdatedSteps}
+            setUpdatedProgress={setUpdatedProgress}
+            setUpdatedTitle={setUpdatedTitle}
           />
         ))}
       </main>

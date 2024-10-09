@@ -5,12 +5,14 @@ const ProgressDropdown = ({
   steps,
   maxStep,
   onMaxStepChange,
+  setUpdatedProgress
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleItemClick = (step) => {
     onMaxStepChange(step);
     setIsOpen(false); 
+    setUpdatedProgress(step)
   };
 
   return (
